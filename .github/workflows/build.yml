@@ -23,8 +23,16 @@ jobs:
       - name: Install Buildozer
         run: pip install --upgrade buildozer cython
 
+        - name: Accept Android SDK licenses
+        run: |
+          yes | buildozer android debug 2>&1 | head -n 1 || true
+          mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
+          echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          echo "84831b9409646a918e30573bab4c9c91346d8abd" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
+
       - name: Build APK
         run: buildozer -v android debug
+       
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
