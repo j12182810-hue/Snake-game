@@ -1,4 +1,4 @@
-ame: Build APK
+name: Build APK
 
 on:
   push:
@@ -22,11 +22,18 @@ jobs:
           sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo6 cmake libffi-dev libssl-dev
 
       - name: Install Buildozer
-        run: pip install --upgrade buildozer cython
+        run: pip install --upgrade buildozer==1.5.0 cython==0.29.36
+
+      - name: Set up Android SDK command-line tools
+        run: |
+          mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
+          cd ~/.buildozer/android/platform/android-sdk/cmdline-tools
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-11076708_latest.zip
+          mv cmdline-tools latest
 
       - name: Accept Android SDK licenses
         run: |
-          yes | buildozer android debug 2>&1 | head -n 1 || true
           mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
           echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
           echo "84831b9409646a918e30573bab4c9c91346d8abd" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
